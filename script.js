@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 3. TIMING SPLASH SCREEN (PASTI JALAN)
+  // 3. TIMING SPLASH SCREEN
   // ==========================================
   setTimeout(() => {
     if (splashScreen) splashScreen.classList.add("hidden");
@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let isPlaying = false;
 
-  // Tap Screen Click Event
   if (tapScreen) {
     tapScreen.addEventListener("click", () => {
       tapScreen.classList.add("hidden");
@@ -59,8 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
         sfxWelcome.play().catch(e => console.log("Audio welcome blocked:", e));
       }
       playBGM();
-
-      // Memuat daftar anggota yang disetujui dari database
       loadApprovedMembers();
     });
   }
@@ -75,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Toggle Music Button
   if (musicBtn) {
     musicBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -111,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Global SFX Click
   document.addEventListener("click", (e) => {
     const isButton = e.target.tagName === "BUTTON" || e.target.closest("button") || e.target.classList.contains("menu-btn");
     if (isButton && tapScreen && tapScreen.classList.contains("hidden")) {
@@ -162,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Load Anggota yang Diterima (Status: approved)
   async function loadApprovedMembers() {
     const container = document.getElementById("member-list-container");
     if (!container) return;
@@ -232,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Verifikasi kata sandi langsung ke tabel admin_config di Supabase
   if (submitPinBtn) {
     submitPinBtn.addEventListener("click", async () => {
       const inputPasscode = adminPinInput ? adminPinInput.value.trim() : "";
@@ -267,7 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Load daftar pendaftaran pending untuk di-review Owner
   async function loadPendingRequests() {
     const pendingList = document.getElementById("pending-list");
     if (!pendingList) return;
@@ -306,7 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Fungsi mengubah status anggota (Terima / Tolak)
   window.updateMemberStatus = async function(id, status) {
     if (!supabase) return;
 
