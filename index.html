@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team YumeID - Official Member Page</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Supabase JS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Audio BGM & SFX -->
+  <audio id="bgm" src="assets/music/BGM.mp3" loop preload="auto"></audio>
+  <audio id="sfx-welcome" src="assets/sound/welcome.mp3" preload="auto"></audio>
+  <audio id="sfx-click" src="assets/sound/clickbutton.mp3" preload="auto"></audio>
+
+  <!-- Tombol Audio Controller -->
+  <button id="music-btn" class="music-btn hidden" title="Toggle Music">
+    <span id="music-icon">🔊</span>
+  </button>
+
+  <!-- LAYER 1: Splash Screen Cinematic -->
+  <div id="splash-screen" class="screen">
+    <div class="splash-content">
+      <img src="assets/image/splash.jpg" alt="Team YumeID Splash" class="splash-logo">
+      <p class="loading-text">Loading Assets...</p>
+    </div>
+  </div>
+
+  <!-- LAYER 2: Tap To Continue -->
+  <div id="tap-screen" class="screen hidden">
+    <div class="tap-bg" style="background-image: url('assets/image/taptocontinuebg.jpg');"></div>
+    <div class="tap-overlay">
+      <h1 class="game-title">TEAM YUMEID</h1>
+      <p class="tap-text">— TEKAN DI MANA SAJA UNTUK LANJUT —</p>
+    </div>
+  </div>
+
+  <!-- LAYER 3: Halaman Utama -->
+  <main id="main-content" class="hidden" style="background-image: url('assets/image/bg.jpg');">
+    <div class="dashboard-container">
+      
+      <!-- Header Brand -->
+      <header class="brand-header">
+        <h1 class="brand-title">YumeID</h1>
+      </header>
+
+      <!-- Navigasi Menu Utama -->
+      <nav class="main-menu">
+        <button class="menu-btn active" data-target="page-anggota">Anggota YumeID</button>
+        <button class="menu-btn" data-target="page-informasi">Informasi YumeID</button>
+        <button class="menu-btn" data-target="page-pendaftaran">Pendaftaran Member</button>
+      </nav>
+
+      <!-- Panel Konten -->
+      <section class="content-panel">
+        
+        <!-- Halaman 1: Anggota YumeID -->
+        <div id="page-anggota" class="tab-content active">
+          <div class="section-header">
+            <h2 class="section-title">DAFTAR ANGGOTA</h2>
+            <!-- Tombol Admin Khusus Owner -->
+            <button id="admin-login-btn" class="admin-access-btn">👑 Panel Owner</button>
+          </div>
+          
+          <div class="member-list" id="member-list-container">
+            <!-- Data Owner Bawaan -->
+            <div class="member-card owner-card">
+              <div class="member-info">
+                <span class="member-name">Reine Mihara</span>
+                <span class="member-role">(Owner / Founder)</span>
+              </div>
+              <div class="member-emblem">🇲🇨👑</div>
+            </div>
+            <!-- Dynamic Data dari Supabase akan di-render di sini -->
+          </div>
+        </div>
+
+        <!-- Halaman 2: Informasi YumeID -->
+        <div id="page-informasi" class="tab-content">
+          <h2 class="section-title">INFORMASI YUMEID</h2>
+          
+          <div class="info-container">
+            <h3 class="info-hero-title">WELCOME TO YUMEID</h3>
+            
+            <p class="info-text highlight">
+              YumeID adalah komunitas kecil untuk kalian yang mau bergabung menjalin persahabatan dan pertemanan lewat sebuah dunia virtual.
+            </p>
+            
+            <p class="info-text">
+              YumeID bukanlah sebuah agensi. Kami lebih ke persaudaraan dan kekeluargaan virtual atau bisa disebut grup online.
+            </p>
+            
+            <p class="info-text">
+              Kalian bisa mendaftarkan diri di halaman pendaftaran secara <strong>GRATIS</strong>.
+            </p>
+            
+            <div class="info-box-founder">
+              <p>YumeID dibangun oleh <span>Reine Mihara</span>.</p>
+              <p class="sub-founder">Tujuan YumeID dibangun untuk menjalin hubungan dan komunitas bersih.</p>
+            </div>
+            
+            <div class="info-rules-notice">
+              <p>Kami juga memiliki ketentuan. Silahkan cek di halaman ketentuan dan keamanan anggota.</p>
+              <p class="warning-text">Barang siapa yang melanggar peraturan kami, maka kami berhak mengeluarkan user tersebut secara sepihak.</p>
+            </div>
+            
+            <div class="info-footer">
+              <h4>SELAMAT BERGABUNG! 🔥</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Halaman 3: Pendaftaran Member -->
+        <div id="page-pendaftaran" class="tab-content">
+          <h2 class="section-title">FORM PENDAFTARAN MEMBER</h2>
+          
+          <form id="registration-form" class="reg-form">
+            <div class="form-group">
+              <label>Nama VTuber / Virtual Name:</label>
+              <input type="text" id="reg-name" placeholder="Contoh: Reine Mihara" required>
+            </div>
+
+            <div class="form-group">
+              <label>Virtual Umur / Roleplay Age:</label>
+              <input type="text" id="reg-age" placeholder="Contoh: 18 Tahun / 500 Tahun" required>
+            </div>
+
+            <div class="form-group">
+              <label>Platform Utama:</label>
+              <select id="reg-platform" required>
+                <option value="YouTube">YouTube</option>
+                <option value="REALITY">REALITY App</option>
+                <option value="Twitch">Twitch</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Biodata Singkat:</label>
+              <textarea id="reg-bio" rows="3" placeholder="Tuliskan perkenalan singkat kamu..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn btn">Kirim Pendaftaran 🚀</button>
+            <p id="form-status-msg" class="status-msg"></p>
+          </form>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- MODAL ADMIN / OWNER DASHBOARD -->
+  <div id="admin-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>PANEL VERIFIKASI OWNER (REINE)</h3>
+        <button id="close-admin-modal" class="close-btn">&times;</button>
+      </div>
+
+      <!-- Form PIN Keamanan Admin -->
+      <div id="admin-login-sec">
+        <p>Masukkan PIN Owner untuk melanjutkan:</p>
+        <input type="password" id="admin-pin-input" placeholder="PIN Rahasia (default: 1234)">
+        <button id="submit-pin-btn" class="btn">Masuk</button>
+      </div>
+
+      <!-- Dashboard Verifikasi (Tersembunyi sampai PIN benar) -->
+      <div id="admin-dashboard-sec" class="hidden">
+        <h4>Pendaftaran Menunggu Persetujuan:</h4>
+        <div id="pending-list" class="pending-list">
+          <!-- Item pendaftaran pending akan muncul di sini -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

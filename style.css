@@ -1,0 +1,588 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  color: #fff;
+}
+
+/* Base Screen Layer */
+.screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1s ease, visibility 1s ease;
+  z-index: 10;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Tombol Kontrol Musik */
+.music-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  color: #fff;
+  font-size: 1.2rem;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.music-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+}
+
+.music-btn.muted {
+  opacity: 0.5;
+}
+
+/* Layer 1: Splash Screen */
+#splash-screen {
+  background-color: #050508;
+}
+
+.splash-content {
+  text-align: center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.splash-logo {
+  max-width: 250px;
+  width: 80%;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+}
+
+.loading-text {
+  margin-top: 20px;
+  letter-spacing: 3px;
+  font-size: 0.9rem;
+  color: #8a8a8a;
+}
+
+/* Layer 2: Tap to Continue Screen */
+#tap-screen {
+  cursor: pointer;
+}
+
+.tap-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.7);
+  transition: transform 10s ease;
+}
+
+#tap-screen:hover .tap-bg {
+  transform: scale(1.05);
+}
+
+.tap-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.game-title {
+  font-size: 3rem;
+  letter-spacing: 5px;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.8);
+  margin-bottom: 50px;
+}
+
+.tap-text {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  animation: blink 1.5s infinite;
+  text-shadow: 0 0 10px #fff;
+}
+
+/* Layer 3: Main Content */
+#main-content {
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-container {
+  width: 90%;
+  max-width: 900px;
+  height: 80vh;
+  background: rgba(10, 15, 25, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 229, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* Header Brand */
+.brand-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.brand-title {
+  font-size: 2.5rem;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.8), 0 0 30px rgba(0, 229, 255, 0.4);
+}
+
+/* Menu Navigasi Utama */
+.main-menu {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.menu-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ccc;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.menu-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.6);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+}
+
+.menu-btn.active {
+  background: rgba(0, 229, 255, 0.3);
+  border-color: #00e5ff;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+}
+
+/* Panel Konten Tab */
+.content-panel {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+  padding-bottom: 8px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: #00e5ff;
+}
+
+.admin-access-btn {
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  color: #ffd700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.admin-access-btn:hover {
+  background: rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* Layout List Anggota */
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.member-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 4px solid #00e5ff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.member-card.owner-card {
+  border-left-color: #ffd700;
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.member-card:hover {
+  background: rgba(0, 229, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.member-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.member-details {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.member-bio {
+  font-size: 0.8rem;
+  color: #ddd;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.member-emblem {
+  font-size: 1.5rem;
+}
+
+/* Styling Halaman Informasi YumeID */
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  line-height: 1.6;
+  color: #e0e0e0;
+}
+
+.info-hero-title {
+  font-size: 1.6rem;
+  letter-spacing: 3px;
+  color: #00e5ff;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+  margin-bottom: 10px;
+}
+
+.info-text {
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 3px solid rgba(0, 229, 255, 0.5);
+}
+
+.info-text.highlight {
+  border-left-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.05);
+  font-size: 1rem;
+}
+
+.info-box-founder {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.info-box-founder span {
+  color: #00e5ff;
+  font-weight: bold;
+}
+
+.info-box-founder .sub-founder {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-top: 5px;
+}
+
+.info-rules-notice {
+  background: rgba(255, 0, 85, 0.08);
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.warning-text {
+  color: #ff4d79;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.info-footer {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 10px;
+}
+
+.info-footer h4 {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Styling Form Pendaftaran */
+.reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: #00e5ff;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 6px;
+  padding: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.form-group select option {
+  background: #111;
+  color: #fff;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+.submit-btn {
+  background: rgba(0, 229, 255, 0.2);
+  border: 1px solid #00e5ff;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: #00e5ff;
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.8);
+}
+
+.status-msg {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Modal Admin / Owner Dashboard */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #0d131d;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 12px;
+  padding: 25px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-header h3 {
+  color: #ffd700;
+  font-size: 1.1rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#admin-login-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+#admin-login-sec input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ffd700;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-align: center;
+}
+
+#submit-pin-btn {
+  background: #ffd700;
+  color: #000;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.pending-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pending-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.approve-btn {
+  background: #00e676;
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+}
+
+.reject-btn {
+  background: #ff1744;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
