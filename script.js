@@ -1,14 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ==========================================
-  // 1. ELEMEN LAYAR & UI
-  // ==========================================
   const splashScreen = document.getElementById("splash-screen");
   const tapScreen = document.getElementById("tap-screen");
   const mainContent = document.getElementById("main-content");
 
-  // ==========================================
-  // 2. INISIALISASI SUPABASE DATABASE
-  // ==========================================
   const SUPABASE_URL = "https://gqnlbflsvtfhrtfxhmaw.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbmxiZmxzdnRmaHJ0ZnhobWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzMjQ1NzksImV4cCI6MjEwMDkwMDU3OX0.0jCXvXEycPrpKB-DUr3aaW0KRGRQTjCCR_g1f-vV4Yk";
 
@@ -16,25 +10,17 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log("Supabase berhasil terhubung!");
-    } else {
-      console.warn("Library Supabase belum siap / gagal dimuat dari CDN.");
     }
   } catch (err) {
     console.error("Error inisialisasi Supabase:", err);
   }
 
-  // ==========================================
-  // 3. TIMING SPLASH SCREEN
-  // ==========================================
+  // TRANSISI DARI SPLASH SCREEN KE TAP SCREEN
   setTimeout(() => {
     if (splashScreen) splashScreen.classList.add("hidden");
     if (tapScreen) tapScreen.classList.remove("hidden");
   }, 3500);
 
-  // ==========================================
-  // 4. AUDIO ELEMENTS & BGM CONTROLLER
-  // ==========================================
   const bgm = document.getElementById("bgm");
   const sfxWelcome = document.getElementById("sfx-welcome");
   const sfxClick = document.getElementById("sfx-click");
@@ -47,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let isPlaying = false;
 
+  // EVENT SAAT LAYAR "TAP TO START" DIKLIK
   if (tapScreen) {
     tapScreen.addEventListener("click", () => {
       tapScreen.classList.add("hidden");
@@ -89,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==========================================
-  // 5. NAVIGASI TAB MENU & SFX
-  // ==========================================
   const menuButtons = document.querySelectorAll(".menu-btn");
   const tabContents = document.querySelectorAll(".tab-content");
 
@@ -117,9 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ==========================================
-  // 6. FORM PENDAFTARAN MEMBER (KE SUPABASE)
-  // ==========================================
   const regForm = document.getElementById("registration-form");
   const statusMsg = document.getElementById("form-status-msg");
 
@@ -203,9 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
     container.innerHTML = membersHTML;
   }
 
-  // ==========================================
-  // 7. PANEL OWNER (VERIFIKASI DATABASE RAHASIA)
-  // ==========================================
   const adminModal = document.getElementById("admin-modal");
   const adminAccessBtn = document.getElementById("admin-login-btn");
   const closeAdminModal = document.getElementById("close-admin-modal");

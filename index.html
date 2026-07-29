@@ -11,16 +11,16 @@
 <body>
 
   <!-- AUDIO BACKGROUND & SFX -->
-  <audio id="bgm" src="assets/audio/bgm.mp3" loop></audio>
-  <audio id="sfx-welcome" src="assets/audio/welcome.mp3"></audio>
-  <audio id="sfx-click" src="assets/audio/click.mp3"></audio>
+  <audio id="bgm" src="./assets/audio/bgm.mp3" loop></audio>
+  <audio id="sfx-welcome" src="./assets/audio/welcome.mp3"></audio>
+  <audio id="sfx-click" src="./assets/audio/click.mp3"></audio>
 
   <!-- TOMBOL MUSIK MELAYANG -->
   <button id="music-btn" class="music-btn hidden muted">
     <span id="music-icon">🔇</span>
   </button>
 
-  <!-- SPLASH SCREEN -->
+  <!-- SPLASH SCREEN (Mulai tanpa hidden) -->
   <div id="splash-screen" class="screen">
     <div class="splash-content">
       <h1>YumeID</h1>
@@ -29,7 +29,7 @@
     </div>
   </div>
 
-  <!-- TAP TO START SCREEN -->
+  <!-- TAP TO START SCREEN (Tunggu Splash selesai) -->
   <div id="tap-screen" class="screen hidden">
     <div class="tap-content">
       <h2>Selamat Datang di YumeID</h2>
@@ -75,7 +75,6 @@
       <div id="members-tab" class="tab-content">
         <h2>Daftar Anggota YumeID</h2>
         <div id="member-list-container" class="member-grid">
-          <!-- Data anggota akan dimuat otomatis dari Supabase -->
           <p>Memuat anggota...</p>
         </div>
       </div>
@@ -113,7 +112,6 @@
               <textarea id="reg-bio" rows="3" required placeholder="Ceritakan sedikit tentang dirimu..."></textarea>
             </div>
 
-            <!-- KOTAK PRIVASI & KEAMANAN RINGKAS -->
             <div class="terms-box">
               <p>🔒 <strong>Keamanan Data:</strong> Dengan mendaftar, kamu setuju menjaga identitas sesama anggota, saling menghormati, dan mematuhi etika komunitas. Data aman dan tidak disalahgunakan.</p>
             </div>
@@ -154,12 +152,11 @@
     </main>
   </div>
 
-  <!-- MODAL ADMIN / PANEL OWNER (VERIFIKASI DATABASE) -->
+  <!-- MODAL ADMIN / PANEL OWNER -->
   <div id="admin-modal" class="modal hidden">
     <div class="modal-content">
       <span id="close-admin-modal" class="close-btn">&times;</span>
       
-      <!-- Bagian Login Sandi -->
       <div id="admin-login-sec">
         <h3>👑 Panel Owner YumeID</h3>
         <p>Masukkan kata sandi rahasia:</p>
@@ -167,13 +164,10 @@
         <button id="submit-pin-btn" class="action-btn">Masuk</button>
       </div>
 
-      <!-- Bagian Dashboard (Muncul Setelah Berhasil) -->
       <div id="admin-dashboard-sec" class="hidden">
         <h3>📋 Panel Verifikasi Pendaftaran</h3>
         <p style="font-size: 0.85rem; color: #00e5ff; margin-bottom: 15px;">Status: Berhasil Masuk (Aman dari Inspect Element)</p>
-        <div id="pending-list" class="pending-container">
-          <!-- Daftar tunggu verifikasi -->
-        </div>
+        <div id="pending-list" class="pending-container"></div>
       </div>
 
     </div>
