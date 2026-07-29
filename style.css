@@ -19,14 +19,15 @@ body {
   display: none !important;
 }
 
-/* LAYAR UTAMA / SPLASH */
+/* ==========================================
+   LAYAR SPLASH & TAP TO START (DENGAN GAMBAR)
+   ========================================== */
 .screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #120c1f, #05070d);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,18 +35,37 @@ body {
   z-index: 999;
   text-align: center;
   padding: 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Latar Splash Screen */
+#splash-screen {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('assets/images/splash-bg.jpg');
+}
+
+/* Latar Tap Screen */
+#tap-screen {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('assets/images/tap-bg.jpg');
+  cursor: pointer;
 }
 
 .splash-content h1 {
   font-size: 3rem;
   color: #00e5ff;
   margin-bottom: 10px;
-  text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.7);
+}
+
+.splash-content p {
+  color: #ddd;
+  font-size: 1.1rem;
 }
 
 .loader-spinner {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border: 4px solid rgba(255, 255, 255, 0.1);
   border-top: 4px solid #00e5ff;
   border-radius: 50%;
@@ -58,10 +78,19 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+.tap-content h2 {
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  margin-bottom: 10px;
+}
+
 .blink {
   animation: blinkAnim 1.5s infinite;
   color: #ff77a9;
   font-weight: bold;
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px rgba(255, 119, 169, 0.6);
 }
 
 @keyframes blinkAnim {
@@ -69,7 +98,7 @@ body {
   50% { opacity: 0.3; }
 }
 
-/* TOMBOL MUSIK */
+/* TOMBOL MUSIK MELAYANG */
 .music-btn {
   position: fixed;
   bottom: 20px;
@@ -77,18 +106,23 @@ body {
   background: rgba(20, 20, 35, 0.85);
   border: 2px solid #00e5ff;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   cursor: pointer;
   z-index: 100;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+  transition: transform 0.2s;
 }
 
-/* KONTEN UTAMA */
+.music-btn:active {
+  transform: scale(0.9);
+}
+
+/* KONTEN UTAMA WEBSITES */
 .main-content {
   width: 100%;
   max-width: 600px;
@@ -166,7 +200,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* KARTU WELCOME & RULES */
+/* KARTU WELCOME, FORM & RULES */
 .welcome-card, .form-card, .rules-card {
   background: rgba(25, 28, 45, 0.85);
   border: 1px solid rgba(0, 229, 255, 0.2);
