@@ -7,6 +7,10 @@
 
 body {
   background-color: #0b0f19;
+  background-image: linear-gradient(rgba(11, 15, 25, 0.85), rgba(11, 15, 25, 0.95)), url('assets/image/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #fff;
   min-height: 100vh;
   display: flex;
@@ -20,7 +24,7 @@ body {
 }
 
 /* ==========================================
-   LAYAR SPLASH & TAP TO START (DENGAN GAMBAR)
+   LAYAR SPLASH & TAP TO START (SESUAI FOLDER IMAGE)
    ========================================== */
 .screen {
   position: fixed;
@@ -40,14 +44,14 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Latar Splash Screen */
+/* Splash Screen (assets/image/splash.jpg) */
 #splash-screen {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('assets/images/splash-bg.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('assets/image/splash.jpg');
 }
 
-/* Latar Tap Screen */
+/* Tap Screen (assets/image/taptocontinuebg.jpg) */
 #tap-screen {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('assets/images/tap-bg.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('assets/image/taptocontinuebg.jpg');
   cursor: pointer;
 }
 
