@@ -1,81 +1,91 @@
-// Inisialisasi Supabase (Bungkus try-catch agar jika offline web tidak macet)
-const SUPABASE_URL = "https://gqnlbflsvtfhrtfxhmaw.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbmxiZmxzdnRmaHJ0ZnhobWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzMjQ1NzksImV4cCI6MjEwMDkwMDU3OX0.0jCXvXEycPrpKB-DUr3aaW0KRGRQTjCCR_g1f-vV4Yk";
-
-let supabase;
-try {
-  if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  } else {
-    console.warn("Supabase SDK gagal dimuat. Pastikan terhubung internet.");
-  }
-} catch (err) {
-  console.error("Gagal inisialisasi Supabase:", err);
-}
-
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. ELEMEN LAYAR & UI
   const splashScreen = document.getElementById("splash-screen");
   const tapScreen = document.getElementById("tap-screen");
   const mainContent = document.getElementById("main-content");
 
-  // Audio Elements
+  // 2. INISIALISASI SUPABASE (Di dalam DOMContentLoaded & Aman dari Crash)
+  const SUPABASE_URL = "https://gqnlbflsvtfhrtfxhmaw.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxbmxiZmxzdnRmaHJ0ZnhobWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzMjQ1NzksImV4cCI6MjEwMDkwMDU3OX0.0jCXvXEycPrpKB-DUr3aaW0KRGRQTjCCR_g1f-vV4Yk";
+
+  let supabase = null;
+  try {
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log("Supabase berhasil terhubung!");
+    } else {
+      console.warn("SDK Supabase belum siap / gagal dimuat dari CDN.");
+    }
+  } catch (err) {
+    console.error("Error inisialisasi Supabase:", err);
+  }
+
+  // 3. TIMING SPLASH SCREEN (PASTI JALAN KARENA ADA DI ATAS)
+  setTimeout(() => {
+    if (splashScreen) splashScreen.classList.add("hidden");
+    if (tapScreen) tapScreen.classList.remove("hidden");
+  }, 3500);
+
+  // 4. AUDIO ELEMENTS
   const bgm = document.getElementById("bgm");
   const sfxWelcome = document.getElementById("sfx-welcome");
   const sfxClick = document.getElementById("sfx-click");
   const musicBtn = document.getElementById("music-btn");
   const musicIcon = document.getElementById("music-icon");
 
-  bgm.volume = 0.3;
-  sfxWelcome.volume = 1.0;
-  sfxClick.volume = 0.8;
+  if (bgm) bgm.volume = 0.3;
+  if (sfxWelcome) sfxWelcome.volume = 1.0;
+  if (sfxClick) sfxClick.volume = 0.8;
 
   let isPlaying = false;
 
-  // 1. Splash Screen Timing (Di-force pasti jalan)
-  setTimeout(() => {
-    if (splashScreen) splashScreen.classList.add("hidden");
-    if (tapScreen) tapScreen.classList.remove("hidden");
-  }, 3500);
+  // 5. TAP SCREEN EVENT
+  if (tapScreen) {
+    tapScreen.addEventListener("click", () => {
+      tapScreen.classList.add("hidden");
+      if (mainContent) mainContent.classList.remove("hidden");
+      if (musicBtn) musicBtn.classList.remove("hidden");
 
-  // 2. Tap Screen Click Event
-  tapScreen.addEventListener("click", () => {
-    tapScreen.classList.add("hidden");
-    mainContent.classList.remove("hidden");
-    musicBtn.classList.remove("hidden");
+      if (sfxWelcome) {
+        sfxWelcome.currentTime = 0;
+        sfxWelcome.play().catch(e => console.log(e));
+      }
+      playBGM();
 
-    sfxWelcome.currentTime = 0;
-    sfxWelcome.play().catch(e => console.log(e));
-    playBGM();
-
-    // Fetch daftar anggota approved saat pertama kali masuk
-    loadApprovedMembers();
-  });
-
-  function playBGM() {
-    bgm.play().then(() => {
-      isPlaying = true;
-      musicIcon.textContent = "🔊";
-      musicBtn.classList.remove("muted");
-    }).catch(err => console.log(err));
+      // Load data anggota dari database
+      loadApprovedMembers();
+    });
   }
 
-  // 3. Audio Toggle
-  musicBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    if (isPlaying) {
-      bgm.pause();
-      isPlaying = false;
-      musicIcon.textContent = "🔇";
-      musicBtn.classList.add("muted");
-    } else {
-      bgm.play();
-      isPlaying = true;
-      musicIcon.textContent = "🔊";
-      musicBtn.classList.remove("muted");
+  function playBGM() {
+    if (bgm) {
+      bgm.play().then(() => {
+        isPlaying = true;
+        if (musicIcon) musicIcon.textContent = "🔊";
+        if (musicBtn) musicBtn.classList.remove("muted");
+      }).catch(err => console.log(err));
     }
-  });
+  }
 
-  // 4. Navigasi Tab Menu
+  // 6. TOGGLE MUSIC
+  if (musicBtn) {
+    musicBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (isPlaying) {
+        bgm.pause();
+        isPlaying = false;
+        musicIcon.textContent = "🔇";
+        musicBtn.classList.add("muted");
+      } else {
+        bgm.play();
+        isPlaying = true;
+        musicIcon.textContent = "🔊";
+        musicBtn.classList.remove("muted");
+      }
+    });
+  }
+
+  // 7. NAVIGASI TAB MENU
   const menuButtons = document.querySelectorAll(".menu-btn");
   const tabContents = document.querySelectorAll(".tab-content");
 
@@ -86,68 +96,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
       button.classList.add("active");
       const targetId = button.getAttribute("data-target");
-      document.getElementById(targetId).classList.add("active");
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) targetElement.classList.add("active");
     });
   });
 
-  // 5. Global SFX Click
+  // 8. GLOBAL SFX CLICK
   document.addEventListener("click", (e) => {
     const isButton = e.target.tagName === "BUTTON" || e.target.closest("button") || e.target.classList.contains("menu-btn");
-    if (isButton && tapScreen.classList.contains("hidden")) {
-      sfxClick.currentTime = 0;
-      sfxClick.play().catch(err => console.log(err));
+    if (isButton && tapScreen && tapScreen.classList.contains("hidden")) {
+      if (sfxClick) {
+        sfxClick.currentTime = 0;
+        sfxClick.play().catch(err => console.log(err));
+      }
     }
   });
 
   // ==========================================
-  // LOGIKA SUPABASE (DATABASE PENDAFTARAN)
+  // LOGIKA DATABASE (FORM PENDAFTARAN)
   // ==========================================
 
   const regForm = document.getElementById("registration-form");
   const statusMsg = document.getElementById("form-status-msg");
 
-  // A. Kirim Form Pendaftaran
-  regForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    statusMsg.style.color = "#00e5ff";
-    statusMsg.textContent = "Mengirim pendaftaran...";
+  if (regForm) {
+    regForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const vtuber_name = document.getElementById("reg-name").value;
-    const virtual_age = document.getElementById("reg-age").value;
-    const platform = document.getElementById("reg-platform").value;
-    const biodata = document.getElementById("reg-bio").value;
+      if (!supabase) {
+        alert("Koneksi database belum siap. Coba refresh halaman.");
+        return;
+      }
 
-    const { data, error } = await supabase
-      .from('members')
-      .insert([
-        { vtuber_name, virtual_age, platform, biodata, status: 'pending' }
-      ]);
+      statusMsg.style.color = "#00e5ff";
+      statusMsg.textContent = "Mengirim pendaftaran...";
 
-    if (error) {
-      statusMsg.style.color = "#ff4d79";
-      statusMsg.textContent = "Gagal mendaftar: " + error.message;
-    } else {
-      statusMsg.style.color = "#00e676";
-      statusMsg.textContent = "Pendaftaran berhasil terkirim! Menunggu persetujuan Owner.";
-      regForm.reset();
-    }
-  });
+      const vtuber_name = document.getElementById("reg-name").value;
+      const virtual_age = document.getElementById("reg-age").value;
+      const platform = document.getElementById("reg-platform").value;
+      const biodata = document.getElementById("reg-bio").value;
 
-  // B. Load Anggota yang Diterima (Status: approved)
+      const { data, error } = await supabase
+        .from('members')
+        .insert([
+          { vtuber_name, virtual_age, platform, biodata, status: 'pending' }
+        ]);
+
+      if (error) {
+        statusMsg.style.color = "#ff4d79";
+        statusMsg.textContent = "Gagal mendaftar: " + error.message;
+      } else {
+        statusMsg.style.color = "#00e676";
+        statusMsg.textContent = "Pendaftaran berhasil terkirim! Menunggu persetujuan Owner.";
+        regForm.reset();
+      }
+    });
+  }
+
+  // Load Anggota Diterima
   async function loadApprovedMembers() {
     const container = document.getElementById("member-list-container");
-    
-    const { data: members, error } = await supabase
-      .from('members')
-      .select('*')
-      .eq('status', 'approved');
+    if (!container) return;
 
-    if (error) {
-      console.log("Error loading members:", error);
-      return;
-    }
-
-    // Reset isi container (simpan data bawaan owner)
     const ownerCardHTML = `
       <div class="member-card owner-card">
         <div class="member-info">
@@ -158,8 +168,23 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    let membersHTML = ownerCardHTML;
+    if (!supabase) {
+      container.innerHTML = ownerCardHTML;
+      return;
+    }
 
+    const { data: members, error } = await supabase
+      .from('members')
+      .select('*')
+      .eq('status', 'approved');
+
+    if (error || !members) {
+      console.log("Error / Tidak ada data:", error);
+      container.innerHTML = ownerCardHTML;
+      return;
+    }
+
+    let membersHTML = ownerCardHTML;
     members.forEach(member => {
       membersHTML += `
         <div class="member-card">
@@ -177,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // LOGIKA ADMIN / OWNER MODAL DASHBOARD
+  // LOGIKA ADMIN / OWNER MODAL
   // ==========================================
 
   const adminModal = document.getElementById("admin-modal");
@@ -188,29 +213,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminLoginSec = document.getElementById("admin-login-sec");
   const adminDashboardSec = document.getElementById("admin-dashboard-sec");
 
-  const OWNER_PIN = "1234"; // PIN default owner
+  const OWNER_PIN = "1234";
 
-  adminAccessBtn.addEventListener("click", () => {
-    adminModal.classList.remove("hidden");
-  });
+  if (adminAccessBtn) {
+    adminAccessBtn.addEventListener("click", () => {
+      if (adminModal) adminModal.classList.remove("hidden");
+    });
+  }
 
-  closeAdminModal.addEventListener("click", () => {
-    adminModal.classList.add("hidden");
-  });
+  if (closeAdminModal) {
+    closeAdminModal.addEventListener("click", () => {
+      if (adminModal) adminModal.classList.add("hidden");
+    });
+  }
 
-  submitPinBtn.addEventListener("click", () => {
-    if (adminPinInput.value === OWNER_PIN) {
-      adminLoginSec.classList.add("hidden");
-      adminDashboardSec.classList.remove("hidden");
-      loadPendingRequests();
-    } else {
-      alert("PIN Salah!");
-    }
-  });
+  if (submitPinBtn) {
+    submitPinBtn.addEventListener("click", () => {
+      if (adminPinInput && adminPinInput.value === OWNER_PIN) {
+        if (adminLoginSec) adminLoginSec.classList.add("hidden");
+        if (adminDashboardSec) adminDashboardSec.classList.remove("hidden");
+        loadPendingRequests();
+      } else {
+        alert("PIN Salah!");
+      }
+    });
+  }
 
-  // Load Data Menunggu Persetujuan
   async function loadPendingRequests() {
     const pendingList = document.getElementById("pending-list");
+    if (!pendingList) return;
+
+    if (!supabase) {
+      pendingList.innerHTML = "<p>Database belum siap.</p>";
+      return;
+    }
+
     pendingList.innerHTML = "<p>Memuat pendaftaran...</p>";
 
     const { data: pendings, error } = await supabase
@@ -218,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .select('*')
       .eq('status', 'pending');
 
-    if (error || !pendings.length) {
+    if (error || !pendings || !pendings.length) {
       pendingList.innerHTML = "<p style='color: #aaa;'>Tidak ada pendaftaran baru.</p>";
       return;
     }
@@ -240,8 +277,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Fungsi Terima / Tolak Pendaftar (diekspos ke window)
   window.updateMemberStatus = async function(id, status) {
+    if (!supabase) return;
+
     const { error } = await supabase
       .from('members')
       .update({ status: status })
@@ -252,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       alert(status === 'approved' ? "Anggota diterima!" : "Pendaftaran ditolak.");
       loadPendingRequests();
-      loadApprovedMembers(); // Auto update daftar anggota di depan
+      loadApprovedMembers();
     }
   };
 });
